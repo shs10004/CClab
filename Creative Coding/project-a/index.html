@@ -1,0 +1,89 @@
+<!-- 
+Template for IMA's Creative Coding Lab 
+
+Project A: Generative Creatures
+CCLaboratories Biodiversity Atlas 
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>[ NAME OF YOUR CREATURE ]</title>
+
+    <!-- allow special characters, including Arabic, Chinese, Korean, Japanese, etc. -->
+    <meta charset="UTF-8">
+    <!-- link the style sheet -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- import p5.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+    <script>
+        // prevent scrolling when spacebar and arrow keys are pressed.
+        window.addEventListener("keydown", function (e) { if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } }, false);
+    </script>
+</head>
+
+<body>
+    <!-- title -->
+    <div id="title-wrapper">
+        <h1 class="headline red">Bubble</h1>
+    </div>
+
+    <!-- main content -->
+    <div id="main-wrapper">
+        <div id="p5-canvas-container">
+            <!-- This is where your p5 sketch will be appended and appear! -->
+        </div>
+        <div class="two-columns">
+            <div class="left">
+                <h3 class="red">Scientific Name:</h3>
+                <p>Cell B</p>
+
+                <h3 class="red">Discovered by / at:</h3>
+                <p>Sabrina Schreck, 24:00 10/31/2024</p>
+
+                <h3 class="red">Family:</h3>
+                <p> None seems to ba a apparent. Possible a cells from an unknown living organisim. Maybe aliens?</p>
+            </div>
+            <div class="right">
+                <h3 class="red">Habitat:</h3>
+                <p>Lives in a black void. This void is never ending and inescapable. It spears to have been inserted here over 800 years ago. </p>
+
+                <h3 class="red">Appearance:</h3>
+                <p>It contains two various shades of pink as an outer layer, and two differnt shades as the inner layer. They each more inversely of each other in a rotating fashion. Additionally, there are two blue blobs. These have no distincy shape and are constantly moving. They also randomly change to that same pink shade as the other cells. </p>
+
+                <h3 class="red">Key Characteristics:</h3>
+                <ul>
+                    <li>Lives in a void</li>
+                    <li>Scared of outside contact a.k.a the mouse</li>
+                    <li>Sticks together</li>
+                    <li>Follows any contact</li>
+                </ul>
+            </div>
+        </div>
+        <div class="one-column">
+            <p>
+                <span class="red">What we know so far about [ Bubble ]:</span>
+                Bubble was likely first developed around 810 years ago dating it back to 1215. This is around the time of Chinggis Khan and his rule. Though it is very old it wasn't until 10/31/2024 when, NYU Shanghai Student, Sabrina Schreck discovered it. She has attempted to study it for the past year, but it is very interesting. It only appears dark enough to be noticeable in the month of October. This is how the name bubble came about. Besides appearing like a bubble, it is only visible during a certain bubble of time.
+                <br>
+                <span class="red"> Guidelines for human interaction with this creature: </span>
+                It is important to be cautious when approaching these creatures. They are very old, but fast. If you leave your hand in for too long it will follow you. Feel free to watch as they become scared when you touch one of them. Their fear is represented in their changing appearance. This is to mimic the other cells, and thus confuse you as to who is who. However, they are completely harmless creatures.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer" class="black">
+        <p>A CCLab project made by Sabrina Schreck in semester 1</p>
+    </div>
+
+    <!-- Home: Link back to the ATLAS page-->
+    <div id="home">
+        <a href="https://cclab.work/atlas">Back to the ATLAS</a>
+    </div>
+
+    <!-- Include your sketch.js file here -->
+    <script src="sketch.js" type="text/javascript"> </script>
+</body>
+
+</html>
