@@ -3,13 +3,36 @@ let cloud1;
 let cloud2;
 let hours = 0;
 let alphaValue = 255;
-let fadeSpeed = 0.008;
+let fadeSpeed = 0.006;
 let t = 0;
+let x, y;
+let shaking = true;
+let baseX, baseY;
+let restartTime = 0;
+let fireworks = [];
+let num = 30;
 
 function setup() {
   createCanvas(800, 500);
   cloud1 = new Cloud(width / 2, height / 2, 100);
   cloud2 = new Cloud(width / 2 - 200, height / 2 - 100, 100);
+  baseX = 168;
+  baseY = 338;
+
+  //for shaking 
+  x = baseX;
+  y = baseY;
+  setRandomRestart();
+
+  //for fireworks 
+  for (let i = 0; i < num; i++) {
+    fireworks.push(new Firework(width / 2, height / 2))
+  }
+}
+
+function preload() {
+  img1 = loadImage("alarm.png");
+  img2 = loadImage("castle.png");
 }
 
 function draw() {
@@ -47,6 +70,20 @@ function mousePressed() {
     } else if (state == 'intro') {
     }
   }
+
+  if (shaking) {
+    let d = dist(mouseX, mouseY, x, y);
+    if (d < 40) {
+      shaking = false;
+      baseX = x;
+      baseY = y;
+      setRandomRestart();
+    }
+  }
+  //fireworks 
+  for (let i = 0; i < num; i++) {
+    fireworks.push(new Firework(mouseX, mouseY))
+  }
 }
 
 function drawIntro() {
@@ -71,6 +108,7 @@ function drawIntro() {
 }
 
 function drawMain1() {
+
   let bgColor;
   if (hours > 0 && hours <= 3) {
     bgColor = lerpColor(color(0, 0, 0), color(43, 44, 92), map(hours, 0, 3, 0, 1));
@@ -149,6 +187,29 @@ function drawMain1() {
   text("10", 29, 130);
   text("11", 43, 120);
 
+  if (!shaking && millis() > restartTime) {
+    shaking = true;
+    setRandomRestart();
+  }
+
+  if (shaking) {
+    // shaking motion
+    x = baseX + random(-5, 5);
+    y = baseY + random(-5, 5);
+
+    image(img1, x - 68, y - 60, 130, 100);
+    fill(255);
+    noStroke();
+    ellipse(x, y, 68, 48);
+
+  }
+
+}
+
+
+function setRandomRestart() {
+  let delay = random(10000, 15000);
+  restartTime = millis() + delay;
 }
 
 function drawMain2() {
@@ -160,7 +221,82 @@ function drawMain2() {
   textSize(12);
   textAlign(CENTER, CENTER);
   text("return", 50, 50);
+  image(img2, 100, 0, 600, 500);
+
+  for (let i = 0; i < fireworks.length; i++) {
+    fireworks[i].update();
+    fireworks[i].display();
+  }
+
+  if (mouseIsPressed) {
+    for (let i = 0; i < 3; i++) {
+      fireworks.push(new Firework(mouseX, mouseY))
+    }
+  }
+
+  //splice
+  for (let i = fireworks.length - 1; i >= 0; i--) {
+    let b = fireworks[i]
+    if (b.isVisible == false) {
+      fireworks.splice(i, 1)
+    }
+  }
 }
+
+class Firework {
+  constructor(startX, startY) {
+    this.x = startX;
+    this.y = startY;
+    this.size = random(2, 10);
+    this.hue = random(0, 360);
+
+    this.speedX = random(-3, 3);
+    this.speedY = random(-1, -3);
+
+    //check canvas 
+    this.isVisible = true;
+
+  }
+
+  update() {
+
+    this.x += this.speedX;
+    this.y += this.speedY;
+
+    this.speedY += 0.06;
+    this.speedX *= 0.99;
+
+    this.hue -= 2
+
+    this.isOnCanvas();
+
+  }
+
+  isOnCanvas() {
+    //check horizontal 
+    if (this.x > width || this.x < 0) {
+      this.isVisible = false
+    }
+    //check vertical 
+    if (this.y > height || this.y < 0) {
+      this.isVisible = false
+    }
+  }
+
+  display() {
+
+    push();
+    translate(this.x, this.y);
+
+    colorMode(HSB)
+    fill(this.hue, 40, 120)
+    noStroke();
+    circle(0, 0, this.size);
+
+    pop();
+  }
+}
+
 
 class Cloud {
   constructor(u, v, s) {
@@ -168,7 +304,7 @@ class Cloud {
     this.v = v;
     this.s = s;
     this.windSpeed = random(-5 || 5);
-    //winds.....random ()
+
   }
 
   display() {
