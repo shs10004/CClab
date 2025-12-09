@@ -9,9 +9,16 @@ let x, y;
 let shaking = true;
 let baseX, baseY;
 let restartTime = 0;
+let angle = 0;
+
+//fireworks 
 let fireworks = [];
 let num = 30;
-let angle = 0;
+let startTime = 0;
+let endTime = 10000;
+let startTime2 = 26000
+let endTime2 = 50000
+
 
 //messages 
 let rectX = 345;
@@ -26,7 +33,6 @@ let ellipses = [];
 
 function setup() {
   createCanvas(800, 500);
-  userStartAudio();
 
   cloud1 = new Cloud(width / 2, height / 2, 100);
   cloud2 = new Cloud(width / 2 - 200, height / 2 - 100, 100);
@@ -98,6 +104,8 @@ function mousePressed() {
     }
   }
   //fireworks 
+  let t = millis();
+
   for (let i = 0; i < num; i++) {
     fireworks.push(new Firework(mouseX, mouseY))
   }
@@ -322,7 +330,7 @@ function drawMain2() {
     bgColor = lerpColor(color(38, 29, 49), color(0, 0, 0), map(hours, 20, 24, 0, 1));
   }
 
-  hours = hours + 0.005;
+  hours = hours + 0.01;
   if (hours > 24) {
     hours = 0;
   }
@@ -340,24 +348,48 @@ function drawMain2() {
   text("return", 50, 50);
   image(img2, 100, 0, 600, 500);
 
-  for (let i = 0; i < fireworks.length; i++) {
-    fireworks[i].update();
-    fireworks[i].display();
+
+  //fireworks
+  let t = millis();
+
+
+  if (t >= startTime && t <= endTime) {
+    for (let i = 0; i < fireworks.length; i++) {
+      fireworks[i].update();
+      fireworks[i].display();
+    }
+    if (mouseIsPressed) {
+      for (let i = 0; i < 3; i++) {
+        fireworks.push(new Firework(mouseX, mouseY))
+      }
+    }
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+      let b = fireworks[i]
+      if (b.isVisible == false) {
+        fireworks.splice(i, 1)
+      }
+    }
+  } else if (t >= startTime2 && t <= endTime2) {
+
+    for (let i = 0; i < fireworks.length; i++) {
+      fireworks[i].update();
+      fireworks[i].display();
+    }
+    if (mouseIsPressed) {
+      for (let i = 0; i < 3; i++) {
+        fireworks.push(new Firework(mouseX, mouseY))
+      }
+    }
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+      let b = fireworks[i]
+      if (b.isVisible == false) {
+        fireworks.splice(i, 1)
+      }
+    }
+  } else {
+    text("Wait for night", 150, 100);
   }
 
-  if (mouseIsPressed) {
-    for (let i = 0; i < 3; i++) {
-      fireworks.push(new Firework(mouseX, mouseY))
-    }
-  }
-
-  //splice
-  for (let i = fireworks.length - 1; i >= 0; i--) {
-    let b = fireworks[i]
-    if (b.isVisible == false) {
-      fireworks.splice(i, 1)
-    }
-  }
 }
 
 class Firework {
