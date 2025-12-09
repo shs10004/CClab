@@ -1,3 +1,4 @@
+//other
 let state = 'intro';
 let cloud1;
 let cloud2;
@@ -11,13 +12,20 @@ let baseX, baseY;
 let restartTime = 0;
 let angle = 0;
 
+//doanld jumps 
+let g2 = 1;
+let jump = 20;
+let ground = 100;
+let sizeW = 100;
+let sizeH = 160
+
+let x2, y2, vy;
+
 //fireworks 
 let fireworks = [];
 let num = 30;
-let startTime = 0;
-let endTime = 10000;
-let startTime2 = 26000
-let endTime2 = 50000
+let startTime2 = 29000;
+let endTime2 = 50000;
 
 
 //messages 
@@ -29,6 +37,10 @@ let rectH = 70;
 let timer = 0;
 let interval = 8000;
 let ellipses = [];
+
+//m&m kiss 
+let showHeart = false;
+let heartAlpha = 0;
 
 
 function setup() {
@@ -48,6 +60,10 @@ function setup() {
   for (let i = 0; i < num; i++) {
     fireworks.push(new Firework(width / 2, height / 2))
   }
+
+  x2 = width / 2 - 285;
+  y2 = height - ground - sizeH / 2;
+  vy = 0;
 }
 
 function preload() {
@@ -56,6 +72,10 @@ function preload() {
   img3 = loadImage("computer1.png");
   img4 = loadImage("future.jpg");
   img5 = loadImage("3025.png");
+  img6 = loadImage("donald.png");
+  img7 = loadImage("minnie.png");
+  img8 = loadImage("mickey.png");
+  img9 = loadImage("goofy.png");
 }
 
 function draw() {
@@ -65,49 +85,6 @@ function draw() {
     drawMain1();
   } else if (state == 'main2') {
     drawMain2();
-  }
-}
-
-function mousePressed() {
-  if (mouseX > 180 && mouseX < 325 && mouseY > 260 && mouseY < 340) {
-    if (state == 'intro') {
-      state = 'main1';
-    } else if (state == 'main1') {
-    }
-  }
-  if (mouseX > 480 && mouseX < 625 && mouseY > 260 && mouseY < 340) {
-    if (state == 'intro') {
-      state = 'main2';
-    } else if (state == 'main2') {
-    }
-  }
-  if (mouseX > 25 && mouseX < 75 && mouseY > 25 && mouseY < 75) {
-    if (state == 'main1') {
-      state = 'intro';
-    } else if (state == 'intro') {
-    }
-  }
-  if (mouseX > 25 && mouseX < 75 && mouseY > 25 && mouseY < 75) {
-    if (state == 'main2') {
-      state = 'intro';
-    } else if (state == 'intro') {
-    }
-  }
-
-  if (shaking) {
-    let d = dist(mouseX, mouseY, x, y);
-    if (d < 40) {
-      shaking = false;
-      baseX = x;
-      baseY = y;
-      setRandomRestart();
-    }
-  }
-  //fireworks 
-  let t = millis();
-
-  for (let i = 0; i < num; i++) {
-    fireworks.push(new Firework(mouseX, mouseY))
   }
 }
 
@@ -131,7 +108,6 @@ function drawIntro() {
   textSize(80);
   textStyle(NORMAL);
   text("Chose a life", width / 2, height / 2 - 50);
-
 }
 
 function drawMain1() {
@@ -212,8 +188,6 @@ function drawMain1() {
   rect(85, 430, 30, 80);
   rect(685, 430, 30, 80);
 
-
-
   textSize(12);
   strokeWeight(2);
   fill(255);
@@ -226,7 +200,6 @@ function drawMain1() {
   rotate(angle);
   rect(0, 0, 0.5, 20);
   pop();
-
 
   push();
   translate(62, 150);
@@ -312,6 +285,7 @@ function setRandomRestart() {
   restartTime = millis() + delay;
 }
 
+
 function drawMain2() {
   let bgColor;
   if (hours > 0 && hours <= 5) {
@@ -335,9 +309,7 @@ function drawMain2() {
     hours = 0;
   }
 
-
   background(bgColor);
-
 
   stroke(0);
   fill(255);
@@ -348,28 +320,10 @@ function drawMain2() {
   text("return", 50, 50);
   image(img2, 100, 0, 600, 500);
 
-
   //fireworks
   let t = millis();
 
-
-  if (t >= startTime && t <= endTime) {
-    for (let i = 0; i < fireworks.length; i++) {
-      fireworks[i].update();
-      fireworks[i].display();
-    }
-    if (mouseIsPressed) {
-      for (let i = 0; i < 3; i++) {
-        fireworks.push(new Firework(mouseX, mouseY))
-      }
-    }
-    for (let i = fireworks.length - 1; i >= 0; i--) {
-      let b = fireworks[i]
-      if (b.isVisible == false) {
-        fireworks.splice(i, 1)
-      }
-    }
-  } else if (t >= startTime2 && t <= endTime2) {
+  if (t >= startTime2 && t <= endTime2) {
 
     for (let i = 0; i < fireworks.length; i++) {
       fireworks[i].update();
@@ -387,9 +341,34 @@ function drawMain2() {
       }
     }
   } else {
-    text("Wait for night", 150, 100);
+    text("Wait for night", 150, 50);
   }
 
+  ///donald 
+  let gy = height - ground;
+  image(img6, x2, y2, sizeW, sizeH);
+  image(img9, x2 + 400, y2 + 25, sizeW, sizeH)
+  y2 += vy;
+
+  if (y2 < height - ground - sizeH / 2) {
+    vy += g2;
+  } else {
+    vy = 0;
+    y2 = height - ground - sizeH / 2;
+  }
+
+  ///m&m
+  image(img7, width / 2 - 80, height / 2 + 150, 80, 100);
+  image(img8, width / 2, height / 2 + 150, 80, 100);
+
+  if (showHeart) {
+    heartAlpha = lerp(heartAlpha, 255, 1);
+  } else {
+    heartAlpha = lerp(heartAlpha, 0, 0.02);
+  }
+  textSize(50);
+  fill(0, 0, 0, heartAlpha);
+  text("❤️", width / 2, height / 2 + 150);
 }
 
 class Firework {
@@ -453,7 +432,6 @@ class Cloud {
     this.v = v;
     this.s = s;
     this.windSpeed = random(-5 || 5);
-
   }
 
   display() {
@@ -471,8 +449,6 @@ class Cloud {
     circle(80, 50, this.s / 12);
     ellipse(this.s - 100, this.s - 60, 200, 100 / 2);
     pop();
-
-
   }
 
   move() {
@@ -482,6 +458,71 @@ class Cloud {
     }
     if (this.u < 0) {
       this.u = this.u + width;
+    }
+  }
+}
+
+function mouseReleased() {
+  showHeart = false;
+}
+
+function mousePressed() {
+  //kiss
+  if (mouseX > width / 2 - 80 && mouseX < width / 2 - 110 + 200 && mouseY > height / 2 + 150 && mouseY < height / 2 + 150 + 100) {
+    showHeart = true;
+  }
+
+  //states
+  if (mouseX > 180 && mouseX < 325 && mouseY > 260 && mouseY < 340) {
+    if (state == 'intro') {
+      state = 'main1';
+    } else if (state == 'main1') {
+    }
+  }
+  if (mouseX > 480 && mouseX < 625 && mouseY > 260 && mouseY < 340) {
+    if (state == 'intro') {
+      state = 'main2';
+    } else if (state == 'main2') {
+    }
+  }
+  if (mouseX > 25 && mouseX < 75 && mouseY > 25 && mouseY < 75) {
+    if (state == 'main1') {
+      state = 'intro';
+    } else if (state == 'intro') {
+    }
+  }
+  if (mouseX > 25 && mouseX < 75 && mouseY > 25 && mouseY < 75) {
+    if (state == 'main2') {
+      state = 'intro';
+    } else if (state == 'intro') {
+    }
+  }
+
+  if (shaking) {
+    let d = dist(mouseX, mouseY, x, y);
+    if (d < 40) {
+      shaking = false;
+      baseX = x;
+      baseY = y;
+      setRandomRestart();
+    }
+  }
+  //fireworks 
+  let t = millis();
+
+  for (let i = 0; i < num; i++) {
+    fireworks.push(new Firework(mouseX, mouseY))
+  }
+
+  //jumps 
+  if (mouseX > 140 && mouseX < 185 && mouseY > 345 && mouseY < 445) {
+    if (y2 >= height - ground - sizeH / 2) {
+      vy = -jump;
+    }
+  }
+  if (mouseX > 540 && mouseX < 575 && mouseY > 345 && mouseY < 500) {
+    if (y2 >= height - ground - sizeH / 2) {
+      vy = -jump;
     }
   }
 }
