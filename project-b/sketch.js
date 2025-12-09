@@ -3,7 +3,7 @@ let cloud1;
 let cloud2;
 let hours = 0;
 let alphaValue = 255;
-let fadeSpeed = 0.006;
+let fadeSpeed = 0.007;
 let t = 0;
 let x, y;
 let shaking = true;
@@ -11,9 +11,23 @@ let baseX, baseY;
 let restartTime = 0;
 let fireworks = [];
 let num = 30;
+let angle = 0;
+
+//messages 
+let rectX = 345;
+let rectY = 260;
+let rectW = 106;
+let rectH = 70;
+
+let timer = 0;
+let interval = 8000;
+let ellipses = [];
+
 
 function setup() {
   createCanvas(800, 500);
+  userStartAudio();
+
   cloud1 = new Cloud(width / 2, height / 2, 100);
   cloud2 = new Cloud(width / 2 - 200, height / 2 - 100, 100);
   baseX = 168;
@@ -33,6 +47,9 @@ function setup() {
 function preload() {
   img1 = loadImage("alarm.png");
   img2 = loadImage("castle.png");
+  img3 = loadImage("computer1.png");
+  img4 = loadImage("future.jpg");
+  img5 = loadImage("3025.png");
 }
 
 function draw() {
@@ -97,12 +114,14 @@ function drawIntro() {
   fill(0);
   textAlign(CENTER, CENTER);
   textSize(18);
-  text("Stay", width / 2 - 150, height / 2 + 50);
+  textStyle(BOLD);
+  text("Your Current", width / 2 - 150, height / 2 + 50);
   textSize(15);
-  text("Look back...", width / 2 + 150, height / 2 + 50);
+  text("Go back...", width / 2 + 150, height / 2 + 50);
   fill(0);
   textFont('Courier New');
   textSize(80);
+  textStyle(NORMAL);
   text("Chose a life", width / 2, height / 2 - 50);
 
 }
@@ -141,6 +160,16 @@ function drawMain1() {
   cloud1.move();
   cloud2.display();
   cloud2.move();
+
+  //streak in window 
+  noStroke();
+  fill(255, 255, 255, 30);
+  quad(400, 0, 420, 0, 0, 420, 0, 400);
+  quad(300, 0, 350, 0, 0, 350, 0, 300);
+  quad(600, 0, 620, 0, 120, 500, 100, 500);
+  quad(650, 0, 700, 0, 180, 500, 150, 500);
+  quad(800, 0, 800, 50, 380, 500, 350, 500);
+
   fill(55, 55, 55);
   noStroke();
   rectMode(CORNER);
@@ -149,29 +178,57 @@ function drawMain1() {
   rect(125, 340, 675, 500);
   rect(675, 40, 125, 340);
   rectMode(CENTER);
+
+  //window 
   stroke(0);
-  strokeWeight(1.5);
+  strokeWeight(5);
   noFill();
   rect(width / 2, height / 2 - 60, 184, 300);
   rect(width / 2 + 184, height / 2 - 60, 184, 300);
   rect(width / 2 - 184, height / 2 - 60, 184, 300);
-  rect(width / 2, height / 2 - 135, 552, 150)
+  rect(width / 2, height / 2 - 135, 552, 150);
+
+  //return button 
   strokeWeight(1);
   fill(255);
   rect(50, 50, 50, 50);
   fill(0);
   textAlign(CENTER, CENTER);
   text("return", 50, 50);
+
+  //table
   fill(229, 229, 229);
   quad(125, 340, 675, 340, 715, 420, 85, 420);
   rectMode(CORNER);
   rect(85, 420, 630, 10);
+  rect(85, 430, 30, 80);
+  rect(685, 430, 30, 80);
+
+
 
   textSize(12);
   strokeWeight(2);
   fill(255);
   circle(62, 150, 100)
   fill(0);
+
+  //clock
+  push();
+  translate(62, 150);
+  rotate(angle);
+  rect(0, 0, 0.5, 20);
+  pop();
+
+
+  push();
+  translate(62, 150);
+  rotate(angle * 2);
+  rect(0, 0, 0.5, 30);
+  pop();
+
+  angle += 0.02;
+
+
   textAlign(CENTER, CENTER);
   text("12", 62, 115);
   text("3", 100, 150);
@@ -187,6 +244,8 @@ function drawMain1() {
   text("10", 29, 130);
   text("11", 43, 120);
 
+
+  //other clock 
   if (!shaking && millis() > restartTime) {
     shaking = true;
     setRandomRestart();
@@ -197,23 +256,81 @@ function drawMain1() {
     x = baseX + random(-5, 5);
     y = baseY + random(-5, 5);
 
-    image(img1, x - 68, y - 60, 130, 100);
-    fill(255);
+    image(img1, x - 67, y - 60, 130, 100);
     noStroke();
+    fill(255);
+    ellipse(x, y, 68, 48);
+    let alpha = map(sin(frameCount * 0.3), -1, 1, 0, 255);
+    fill(255, 0, 0, alpha);
     ellipse(x, y, 68, 48);
 
   }
 
+  ////computer 
+  image(img3, 262, 200, 275, 215);
+  fill(255, 255, 255, 120)
+  rect(316, 242, 166, 110);
+
+  if (millis() - timer > interval) {
+    timer = millis();
+    ellipses.push(randomPoint());
+  }
+
+  for (let e of ellipses) {
+    noStroke();
+    fill(0, 122, 255);
+    ellipse(e.x, e.y, 80, 25);
+
+    fill(0);
+    textStyle(BOLD);
+    text("WORK!!", e.x, e.y);
+  }
+
+  //poster 
+  image(img4, 690, 50, 100, 130);
+  image(img5, 690, 200, 100, 130);
+}
+
+function randomPoint() {
+  return {
+    x: random(rectX, rectX + rectW),
+    y: random(rectY, rectY + rectH)
+  };
 }
 
 
 function setRandomRestart() {
-  let delay = random(10000, 15000);
+  let delay = random(4000, 6000);
   restartTime = millis() + delay;
 }
 
 function drawMain2() {
-  background(205, 230, 255);
+  let bgColor;
+  if (hours > 0 && hours <= 5) {
+    bgColor = lerpColor(color(0, 0, 0), color(43, 44, 92), map(hours, 0, 5, 0, 1));
+  } else if (hours > 5 && hours < 7) {
+    bgColor = lerpColor(color(43, 44, 92), color(163, 182, 190), map(hours, 5, 7, 0, 1));
+  } else if (hours > 7 && hours <= 9) {
+    bgColor = lerpColor(color(163, 182, 190), color(107, 142, 176), map(hours, 7, 9, 0, 1));
+  } else if (hours > 9 && hours <= 16) {
+    bgColor = lerpColor(color(107, 142, 176), color(110, 167, 223), map(hours, 9, 16, 0, 1));
+  } else if (hours > 16 && hours < 18) {
+    bgColor = lerpColor(color(110, 167, 223), color(49, 39, 85), map(hours, 16, 18, 0, 1));
+  } else if (hours > 18 && hours < 20) {
+    bgColor = lerpColor(color(49, 39, 85), color(38, 29, 49), map(hours, 18, 20, 0, 1));
+  } else {
+    bgColor = lerpColor(color(38, 29, 49), color(0, 0, 0), map(hours, 20, 24, 0, 1));
+  }
+
+  hours = hours + 0.005;
+  if (hours > 24) {
+    hours = 0;
+  }
+
+
+  background(bgColor);
+
+
   stroke(0);
   fill(255);
   rect(50, 50, 50, 50);
