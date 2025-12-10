@@ -19,7 +19,10 @@ let ground = 100;
 let sizeW = 100;
 let sizeH = 160
 
+let g3 = 1;
+
 let x2, y2, vy;
+let x3, y3, vy3;
 
 //fireworks 
 let fireworks = [];
@@ -64,6 +67,10 @@ function setup() {
   x2 = width / 2 - 285;
   y2 = height - ground - sizeH / 2;
   vy = 0;
+
+  x3 = width / 2 - 285;
+  y3 = height - ground - sizeH / 2;
+  vy3 = 0;
 }
 
 function preload() {
@@ -347,7 +354,6 @@ function drawMain2() {
   ///donald 
   let gy = height - ground;
   image(img6, x2, y2, sizeW, sizeH);
-  image(img9, x2 + 400, y2 + 25, sizeW, sizeH)
   y2 += vy;
 
   if (y2 < height - ground - sizeH / 2) {
@@ -355,6 +361,18 @@ function drawMain2() {
   } else {
     vy = 0;
     y2 = height - ground - sizeH / 2;
+  }
+
+  //goofy 
+  let gy3 = height - ground;
+  image(img9, x3 + 400, y3 + 25, sizeW, sizeH)
+  y3 += vy3;
+
+  if (y3 < height - ground - sizeH / 2) {
+    vy3 += g3;
+  } else {
+    vy3 = 0;
+    y3 = height - ground - sizeH / 2;
   }
 
   ///m&m
@@ -521,8 +539,8 @@ function mousePressed() {
     }
   }
   if (mouseX > 540 && mouseX < 575 && mouseY > 345 && mouseY < 500) {
-    if (y2 >= height - ground - sizeH / 2) {
-      vy = -jump;
+    if (y3 >= height - ground - sizeH / 2) {
+      vy3 = -jump;
     }
   }
 }
