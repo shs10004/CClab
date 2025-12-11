@@ -45,7 +45,7 @@ let ellipses = [];
 let showHeart = false;
 let heartAlpha = 0;
 
-
+//music
 let song;
 let alarm;
 
@@ -385,14 +385,16 @@ function drawMain2() {
   image(img7, width / 2 - 80, height / 2 + 150, 80, 100);
   image(img8, width / 2, height / 2 + 150, 80, 100);
 
+  //showHeart = false;
+
   if (showHeart) {
     heartAlpha = lerp(heartAlpha, 255, 1);
+    textSize(50);
+    fill(0, 0, 0, heartAlpha);
+    text("❤️", width / 2, height / 2 + 150);
   } else {
     heartAlpha = lerp(heartAlpha, 0, 0.02);
   }
-  textSize(50);
-  fill(0, 0, 0, heartAlpha);
-  text("❤️", width / 2, height / 2 + 150);
 }
 
 class Firework {
@@ -486,14 +488,13 @@ class Cloud {
   }
 }
 
-function mouseReleased() {
-  showHeart = false;
-}
 
 function mousePressed() {
   //kiss
   if (mouseX > width / 2 - 80 && mouseX < width / 2 - 110 + 200 && mouseY > height / 2 + 150 && mouseY < height / 2 + 150 + 100) {
     showHeart = true;
+  } else {
+    showHeart = false;
   }
 
   //states
@@ -545,7 +546,6 @@ function mousePressed() {
       baseX = x;
       baseY = y;
       setRandomRestart();
-
     }
   }
   //fireworks 
@@ -566,4 +566,7 @@ function mousePressed() {
       vy3 = -jump;
     }
   }
+}
+function mouseReleased() {
+  showHeart = false;
 }
