@@ -46,6 +46,10 @@ let showHeart = false;
 let heartAlpha = 0;
 
 
+let song;
+let alarm;
+
+
 function setup() {
   createCanvas(800, 500);
 
@@ -83,6 +87,8 @@ function preload() {
   img7 = loadImage("minnie.png");
   img8 = loadImage("mickey.png");
   img9 = loadImage("goofy.png");
+  song = loadSound('disney.mp3');
+  alarm = loadSound('alarm.mp3');
 }
 
 function draw() {
@@ -288,7 +294,7 @@ function randomPoint() {
 
 
 function setRandomRestart() {
-  let delay = random(4000, 6000);
+  let delay = random(3800, 4000);
   restartTime = millis() + delay;
 }
 
@@ -494,35 +500,52 @@ function mousePressed() {
   if (mouseX > 180 && mouseX < 325 && mouseY > 260 && mouseY < 340) {
     if (state == 'intro') {
       state = 'main1';
+      song.stop();
     } else if (state == 'main1') {
     }
   }
   if (mouseX > 480 && mouseX < 625 && mouseY > 260 && mouseY < 340) {
     if (state == 'intro') {
       state = 'main2';
+
+      if (song.isPlaying()) {
+        song.stop();
+      } else {
+        song.play();
+      }
     } else if (state == 'main2') {
     }
   }
   if (mouseX > 25 && mouseX < 75 && mouseY > 25 && mouseY < 75) {
     if (state == 'main1') {
       state = 'intro';
+      song.stop();
+      alarm.stop();
     } else if (state == 'intro') {
     }
   }
   if (mouseX > 25 && mouseX < 75 && mouseY > 25 && mouseY < 75) {
     if (state == 'main2') {
       state = 'intro';
+      song.stop();
     } else if (state == 'intro') {
     }
   }
 
+
   if (shaking) {
     let d = dist(mouseX, mouseY, x, y);
     if (d < 40) {
+      if (alarm.isPlaying()) {
+        alarm.stop();
+      } else {
+        alarm.play();
+      }
       shaking = false;
       baseX = x;
       baseY = y;
       setRandomRestart();
+
     }
   }
   //fireworks 
